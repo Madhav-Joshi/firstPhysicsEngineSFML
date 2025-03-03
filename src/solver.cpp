@@ -1,8 +1,7 @@
 #include "solver/solver.hpp"
-#include <iostream>
 
-VerletObject::VerletObject(sf::Vector2f const& position_, sf::Vector2f const& acceleration_)
-    : position{position_}, position_last{position_}, acceleration{acceleration_} {};
+VerletObject::VerletObject(sf::Vector2f const& position_, float radius_)
+    : position{position_}, position_last{position_}, radius{radius_} {};
 
 void VerletObject::update(float dt)
 {
@@ -35,16 +34,46 @@ sf::Vector2f VerletObject::getVelocity(float dt) const
     return (position - position_last) / dt;
 }
 
-VerletObject& Solver::addObject(sf::Vector2f const& position, sf::Vector2f const& acceleration)
+VerletObject& Solver::addObject(sf::Vector2f const& position, float radius)
 {
-    m_objects.emplace_back(position, acceleration);
+    m_objects.emplace_back(position, radius);
     return m_objects.back();
 }
 
 void Solver::update(float dt){
-    for (auto &object : m_objects)
-    {
-        object.accelerate(m_gravity);
-        object.update(dt);
+    applyGravity();
+    applyConstraint();
+    updateObjects(dt);
+}
+
+void Solver::setConstraint(sf::Vector2f position, float radius)
+{
+    m_constraint_center = position;
+    m_constraint_radius = radius;
+}
+
+void Solver::applyGravity()
+{
+    for (auto& obj : m_objects) {
+        obj.accelerate(m_gravity);
+    }
+}
+
+void Solver::applyConstraint()
+{
+    for (auto& obj : m_objects) {
+        const sf::Vector2f v    = m_constraint_center - obj.position;
+        const float        dist = sqrt(v.x * v.x + v.y * v.y);
+        if (dist > (m_constraint_radius - obj.radius)) {
+            const sf::Vector2f n = v / dist;
+            obj.position = m_constraint_center - n * (m_constraint_radius - obj.radius);
+        }
+    }
+}
+
+void Solver::updateObjects(float dt)
+{
+    for (auto& obj : m_objects) {
+        obj.update(dt);
     }
 }

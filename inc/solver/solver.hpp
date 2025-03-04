@@ -44,6 +44,7 @@ public:
     void applyConstraint();
     void updateObjects(float dt);
     void setObjectVelocity(VerletObject &object, sf::Vector2f v);
+    void checkCollisions(float dt);
     [[nodiscard]] sf::Vector3f getConstraint() const;
     [[nodiscard]] const std::vector<VerletObject> &getObjects() const;
     [[nodiscard]] float getTime() const;

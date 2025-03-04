@@ -16,7 +16,7 @@ int main()
 
     // Set simulation attributes
     const float object_spawn_delay = 0.05f;
-    const uint32_t max_objects_count = 20;
+    const uint32_t max_objects_count = 200;
     const sf::Vector2f object_spawn_position = sf::Vector2f(200.0f, 0.0f) + conf::window_size_f * 0.5f;
     const float object_spawn_speed = 300.0f;
 

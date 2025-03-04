@@ -88,8 +88,12 @@ void Solver::updateObjects(float dt)
     }
 }
 
-[[nodiscard]]
-sf::Vector3f Solver::getConstraint() const
+void Solver::setObjectVelocity(VerletObject &object, sf::Vector2f v)
+{
+    object.setVelocity(v, getStepDt());
+}
+
+[[nodiscard]] sf::Vector3f Solver::getConstraint() const
 {
     return {m_constraint_center.x, m_constraint_center.y, m_constraint_radius};
 }
@@ -110,4 +114,10 @@ float Solver::getTime() const
 float Solver::getStepDt() const
 {
     return m_frame_dt / static_cast<float>(m_sub_steps);
+}
+
+[[nodiscard]]
+uint64_t Solver::getObjectsCount() const
+{
+    return m_objects.size();
 }

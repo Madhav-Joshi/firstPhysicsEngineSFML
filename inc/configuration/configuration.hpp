@@ -9,6 +9,6 @@ namespace conf
     float const dt = 1.0f / static_cast<float>(max_framerate);
 
     // Ball configuration
-    float const radius = 50.0f;
+    float const radius = 10.0f;
 
 } // namespace conf

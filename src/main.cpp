@@ -14,38 +14,34 @@ int main()
     // Renderer
     Renderer renderer{window};
 
+    // Set simulation attributes
+    const float object_spawn_delay = 0.05f;
+    const uint32_t max_objects_count = 20;
+    const sf::Vector2f object_spawn_position = sf::Vector2f(200.0f, 0.0f) + conf::window_size_f * 0.5f;
+    const float object_spawn_speed = 300.0f;
+
     // Solver configurations
-    Solver ball;
-    ball.m_frame_dt = conf::dt;
-    ball.setConstraint(conf::window_size_f * 0.5f, 450.0f);
-    sf::Vector2f spawnPosition = sf::Vector2f(200.0f, 0.0f) + conf::window_size_f * 0.5f;
-    ball.addObject(spawnPosition, conf::radius);
+    Solver balls;
+    balls.m_frame_dt = conf::dt;
+    balls.setConstraint(conf::window_size_f * 0.5f, 450.0f);
 
-    sf::CircleShape shape{conf::radius};
-    sf::Vector2f origin{conf::radius, conf::radius};
-    shape.setOrigin(origin);
-    // shape.setFillColor(sf::Color::Green);
-
-    // // Constraint shape
-    // sf::CircleShape constraintShape{ball.m_constraint_radius};
-    // constraintShape.setOrigin(sf::Vector2f(ball.m_constraint_radius, ball.m_constraint_radius));
-    // constraintShape.setPosition(ball.m_constraint_center);
-    // constraintShape.setFillColor(sf::Color::Black);
-    // constraintShape.setOutlineColor(sf::Color::White);
-    // constraintShape.setPointCount(128);
-    // constraintShape.setOutlineThickness(2.0f);
-
+    sf::Clock clock;
     while (window.isOpen())
     {
         processEvents(window);
+
+        // std::cout << "position: " << balls.m_objects[0].position.x << " " << balls.m_objects[0].position.y << std::endl;
+        if (balls.getObjectsCount() < max_objects_count && clock.getElapsedTime().asSeconds() >= object_spawn_delay)
+        {
+            clock.restart();
+            auto &ball = balls.addObject(object_spawn_position, conf::radius);
+            balls.setObjectVelocity(ball, object_spawn_speed * sf::Vector2f{0, 1});
+            ball.color = sf::Color::White;
+        }
+
+        balls.update();
         window.clear();
-
-        // std::cout << "position: " << ball.m_objects[0].position.x << " " << ball.m_objects[0].position.y << std::endl;
-        shape.setPosition(ball.m_objects[0].position);
-        ball.update();
-
-        renderer.render(ball);
-
+        renderer.render(balls);
         window.display();
     }
 }

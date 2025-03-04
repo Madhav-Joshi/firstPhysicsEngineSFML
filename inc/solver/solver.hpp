@@ -30,7 +30,7 @@ public:
     ~Solver() = default;
 
     std::vector<VerletObject> m_objects;
-    sf::Vector2f m_gravity{0.0f, 1000.0f};
+    sf::Vector2f m_gravity{0.0f, 10000.0f};
     sf::Vector2f m_constraint_center;
     float m_constraint_radius;
     float m_time = 0.0f;
@@ -43,8 +43,10 @@ public:
     void applyGravity();
     void applyConstraint();
     void updateObjects(float dt);
+    void setObjectVelocity(VerletObject &object, sf::Vector2f v);
     [[nodiscard]] sf::Vector3f getConstraint() const;
     [[nodiscard]] const std::vector<VerletObject> &getObjects() const;
     [[nodiscard]] float getTime() const;
     [[nodiscard]] float getStepDt() const;
+    [[nodiscard]] uint64_t getObjectsCount() const;
 };

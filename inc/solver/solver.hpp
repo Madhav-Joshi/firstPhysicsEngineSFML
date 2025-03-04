@@ -33,13 +33,18 @@ public:
     sf::Vector2f m_gravity{0.0f, 1000.0f};
     sf::Vector2f m_constraint_center;
     float m_constraint_radius;
+    float m_time = 0.0f;
+    float m_frame_dt = 0.0f;
+    uint32_t m_sub_steps = 8;
 
     VerletObject &addObject(sf::Vector2f const &position, float radius);
-    void update(float dt);
+    void update();
     void setConstraint(sf::Vector2f position, float radius);
     void applyGravity();
     void applyConstraint();
     void updateObjects(float dt);
     [[nodiscard]] sf::Vector3f getConstraint() const;
     [[nodiscard]] const std::vector<VerletObject> &getObjects() const;
+    [[nodiscard]] float getTime() const;
+    [[nodiscard]] float getStepDt() const;
 };

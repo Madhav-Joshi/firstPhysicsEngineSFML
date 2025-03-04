@@ -16,6 +16,7 @@ int main()
 
     // Solver configurations
     Solver ball;
+    ball.m_frame_dt = conf::dt;
     ball.setConstraint(conf::window_size_f * 0.5f, 450.0f);
     sf::Vector2f spawnPosition = sf::Vector2f(200.0f, 0.0f) + conf::window_size_f * 0.5f;
     ball.addObject(spawnPosition, conf::radius);
@@ -41,7 +42,7 @@ int main()
 
         // std::cout << "position: " << ball.m_objects[0].position.x << " " << ball.m_objects[0].position.y << std::endl;
         shape.setPosition(ball.m_objects[0].position);
-        ball.update(conf::dt);
+        ball.update();
 
         renderer.render(ball);
 

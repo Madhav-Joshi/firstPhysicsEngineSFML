@@ -40,11 +40,16 @@ VerletObject &Solver::addObject(sf::Vector2f const &position, float radius)
     return m_objects.back();
 }
 
-void Solver::update(float dt)
+void Solver::update()
 {
-    applyGravity();
-    applyConstraint();
-    updateObjects(dt);
+    m_time += m_frame_dt;
+    const float step_dt = getStepDt();
+    for (uint32_t i{m_sub_steps}; i--;)
+    {
+        applyGravity();
+        applyConstraint();
+        updateObjects(step_dt);
+    }
 }
 
 void Solver::setConstraint(sf::Vector2f position, float radius)
@@ -93,4 +98,16 @@ sf::Vector3f Solver::getConstraint() const
 const std::vector<VerletObject> &Solver::getObjects() const
 {
     return m_objects;
+}
+
+[[nodiscard]]
+float Solver::getTime() const
+{
+    return m_time;
+}
+
+[[nodiscard]]
+float Solver::getStepDt() const
+{
+    return m_frame_dt / static_cast<float>(m_sub_steps);
 }
